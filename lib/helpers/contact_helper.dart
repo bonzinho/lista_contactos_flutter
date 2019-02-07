@@ -36,12 +36,16 @@ class ContactHelper{
   // funcção para inciializar a base de dados
   Future<Database> initDb() async{
     final databasePath = await getDatabasesPath(); //Local onde esta a base de dados
-    final path = join(databasePath, "contacts.db"); // Aqui o caminho da base de dados e junto com o o nome da db.
+    final path = join(databasePath, "contacts_app.db"); // Aqui o caminho da base de dados e junto com o o nome da db.
 
     // abrir a base de dados
     return await openDatabase(path, version: 1, onCreate: (Database db, int newerVersion) async{
       await db.execute(
-        "CREATE TABLE $contactTable($idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $emailColumn TEXT, $phoneColumn TEXT, $imgColumn TEXT) "  // vamos pedir para ser criada uam tabela com as colunas
+        "CREATE TABLE $contactTable($idColumn INTEGER PRIMARY KEY, "
+            "$nameColumn TEXT, "
+            "$emailColumn TEXT, "
+            "$phoneColumn TEXT, "
+            "$imgColumn TEXT) "  // vamos pedir para ser criada uam tabela com as colunas
       );
     });
   }
@@ -113,12 +117,16 @@ class ContactHelper{
 class Contact{
   // Classe que vai armazenar todos os dados necessarios para os contactos
 
+
   // Atributos
   int id;
   String name;
   String email;
   String phone;
   String img;
+
+  // Construtor vazio
+  Contact();
 
   // Serve par armazenar os dados em formato de Map
   Contact.fromMap(Map map){
@@ -150,6 +158,5 @@ class Contact{
     // Ser para quando o app estiver a ser montado poder ler todos os contactos no print para debug
     return "Contact(id: #id, name: $name, email: $email, phone: $phone, img: $img)";
   }
-
 
 }
