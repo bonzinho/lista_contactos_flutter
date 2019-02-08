@@ -5,6 +5,9 @@ import 'package:contact_list/ui/contact_page.dart';
 import "package:flutter/material.dart";
 import "package:url_launcher/url_launcher.dart";
 
+// Constantes
+enum OrderOtions {orderaz, orderza}
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -31,6 +34,21 @@ class _HomePageState extends State<HomePage> {
         title: Text("Contactos"),
         backgroundColor: Colors.red,
         centerTitle: true,
+        actions: <Widget>[
+          PopupMenuButton<OrderOtions>(
+            itemBuilder: (context) => <PopupMenuEntry<OrderOtions>>[
+              const PopupMenuItem<OrderOtions>(
+                  child: Text("Ordenar de A-Z"),
+                  value: OrderOtions.orderaz,
+              ),
+              const PopupMenuItem<OrderOtions>(
+                  child: Text("Ordenar de Z-A"),
+                  value: OrderOtions.orderza,
+              ),
+            ],
+            onSelected: _orderList,
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
@@ -169,10 +187,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getAllContacts() async{
+     helper.getAllContacts().then((list){
+       setState(() {
+         contacts = list;
+       });
+    });
+  }
+
+  void _orderList(OrderOtions result){
+    switch(result){
+      case OrderOtions.orderaz:
+        contacts.sort((a,b){
+          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        });
+        break;
+      case OrderOtions.orderza:
+        contacts.sort((a,b){
+          return b.name.toLowerCase().compareTo(a.name.toLowerCase());
+        });
+        break;
+    }
     setState(() {
-       helper.getAllContacts().then((list){
-        contacts = list;
-      });
+
     });
   }
 
